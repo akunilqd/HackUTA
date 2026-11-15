@@ -15,6 +15,14 @@ create table if not exists public.doctor_appointments (
   updated_at   timestamptz not null default now()
 );
 
+-- What the doctor told the patient at the visit: diet, dose changes, tests, when to come back.
+-- Separate from `notes` (the family's own reminders before the visit). Added with IF NOT EXISTS so this
+-- file also upgrades a table created by an earlier version of it.
+alter table public.doctor_appointments add column if not exists doctor_instructions text;
+
+comment on column public.doctor_appointments.notes is 'Family''s own notes before the visit: what to bring, fasting, questions to ask.';
+comment on column public.doctor_appointments.doctor_instructions is 'What the doctor advised at the visit.';
+
 alter table public.doctor_appointments drop constraint if exists doctor_appointments_status_check;
 alter table public.doctor_appointments add constraint doctor_appointments_status_check
   check (status in ('scheduled', 'completed', 'cancelled', 'missed'));

@@ -101,6 +101,7 @@ export type Database = {
           scheduled_at: string;
           status: AppointmentStatus;
           notes: string | null;
+          doctor_instructions: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -113,6 +114,7 @@ export type Database = {
           scheduled_at: string;
           status?: AppointmentStatus;
           notes?: string | null;
+          doctor_instructions?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["doctor_appointments"]["Insert"]>;
         Relationships: [

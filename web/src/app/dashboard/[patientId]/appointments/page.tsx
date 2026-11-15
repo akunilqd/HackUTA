@@ -77,7 +77,7 @@ async function Appointments({ params }: Pick<Props, "params">) {
       {past.length > 0 && (
         <section aria-labelledby="past-heading" className="flex flex-col gap-4">
           <h2 id="past-heading" className="text-[1.5rem]">
-            Past and cancelled
+            Completed, cancelled and past
           </h2>
           {list(past)}
         </section>
@@ -103,7 +103,18 @@ function AppointmentView({ a, zone }: { a: AppointmentRow; zone: string }) {
           ]}
         />
       </div>
-      {a.notes && <p className="mt-4 whitespace-pre-line border-l-4 border-gold pl-4 text-ink">{a.notes}</p>}
+      {a.doctor_instructions && (
+        <div className="mt-5 border-l-4 border-terracotta-deep bg-white/40 py-3 pl-4 pr-3">
+          <p className="text-[0.95rem] font-bold uppercase tracking-[0.08em] text-terracotta-deep">Doctor&rsquo;s instructions</p>
+          <p className="mt-1 whitespace-pre-line">{a.doctor_instructions}</p>
+        </div>
+      )}
+      {a.notes && (
+        <div className="mt-4 border-l-4 border-gold pl-4">
+          <p className="text-[0.95rem] text-ink">Family notes</p>
+          <p className="mt-0.5 whitespace-pre-line text-ink">{a.notes}</p>
+        </div>
+      )}
     </>
   );
 }
@@ -151,7 +162,21 @@ function AppointmentForms({ patientId, zone, a }: { patientId: string; zone: str
               <input id={`${id}-location`} name="location" maxLength={240} defaultValue={a?.location ?? ""} placeholder="Clinic name or address" className={inputClass} />
             </Field>
           </div>
-          <Field id={`${id}-notes`} label="Notes (optional)" hint="What to bring, fasting, questions to ask.">
+          <Field
+            id={`${id}-instructions`}
+            label="Doctor's instructions (optional)"
+            hint="What the doctor advised: diet, dose changes, tests, when to come back."
+          >
+            <textarea
+              id={`${id}-instructions`}
+              name="doctorInstructions"
+              rows={4}
+              maxLength={4000}
+              defaultValue={a?.doctor_instructions ?? ""}
+              className={`${inputClass} py-3`}
+            />
+          </Field>
+          <Field id={`${id}-notes`} label="Family notes (optional)" hint="Before the visit: what to bring, fasting, questions to ask.">
             <textarea id={`${id}-notes`} name="notes" rows={3} maxLength={2000} defaultValue={a?.notes ?? ""} className={`${inputClass} py-3`} />
           </Field>
         </div>
