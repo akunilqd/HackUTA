@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "quiet";
+type Variant = "primary" | "secondary" | "quiet" | "light";
 
 const base =
   "inline-flex items-center justify-center gap-2 min-h-14 px-7 rounded-md font-bold text-[1.05rem] leading-none " +
@@ -14,6 +14,8 @@ const variants: Record<Variant, string> = {
     "[@media(hover:hover)]:hover:shadow-[0_3px_10px_-2px_rgba(168,74,37,0.45)]",
   secondary: "border-2 border-glaze text-glaze bg-transparent hover:bg-glaze hover:text-cream",
   quiet: "min-h-12 px-4 text-aegean-deep underline underline-offset-4 hover:text-glaze",
+  /** Outline for dark grounds (the landing artwork). */
+  light: "border-2 border-cream text-cream bg-glaze/35 hover:bg-cream hover:text-glaze",
 };
 
 export function buttonClass(variant: Variant = "primary", extra = "") {

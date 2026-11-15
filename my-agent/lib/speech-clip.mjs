@@ -3,6 +3,8 @@
 // a clip played with session.say({ audio }) always says the line.
 import { GoogleGenAI } from '@google/genai';
 import { AudioFrame } from '@livekit/rtc-node';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 // Both render a short line in 2-3 s with the agent's own voice; the second is a fallback.
 const MODELS = ['gemini-3.8-flash-tts', 'gemini-2.5-flash-preview-tts'];
@@ -32,8 +34,7 @@ function decode(bytes, mimeType) {
   return { pcm: new Int16Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + (bytes.length & ~1))), rate };
 }
 
-/** Renders `text` in the given Gemini voice. Resolves to { pcm, rate }. */
-export async function renderSpeech(text, voice) {
+async function renderFromGemini(text, voice) {
   const errors = [];
   for (const model of MODELS) {
     try {
@@ -54,6 +55,28 @@ export async function renderSpeech(text, voice) {
     }
   }
   throw new Error(errors.join(' | '));
+}
+
+// The same greeting and goodbye lines are said on every call, so a rendered clip is kept on disk and reused:
+// it saves a TTS request (the free tier allows only a few a day) and the 2-3 s render at the start of each call.
+const CACHE_DIR = new URL('../.cache/speech/', import.meta.url);
+
+/** Renders `text` in the given Gemini voice, from the disk cache when this exact line was rendered before. Resolves to { pcm, rate }. */
+export async function renderSpeech(text, voice) {
+  const key = createHash('sha1').update(`${voice}
+${text}`).digest('hex');
+  const file = new URL(`${key}.json`, CACHE_DIR);
+  try {
+    const saved = JSON.parse(await readFile(file, 'utf8'));
+    const bytes = Buffer.from(saved.pcm, 'base64');
+    return { pcm: new Int16Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.length)), rate: saved.rate };
+  } catch { /* not cached yet */ }
+  const clip = await renderFromGemini(text, voice);
+  try {
+    await mkdir(CACHE_DIR, { recursive: true });
+    await writeFile(file, JSON.stringify({ rate: clip.rate, pcm: Buffer.from(clip.pcm.buffer, clip.pcm.byteOffset, clip.pcm.byteLength).toString('base64') }));
+  } catch (error) { console.error(`[speech] could not cache the clip: ${error.message}`); }
+  return clip;
 }
 
 /** The clip as 10 ms audio frames, for session.say(text, { audio }). */

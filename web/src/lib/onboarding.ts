@@ -23,7 +23,7 @@ const optionalNumber = (label: string, max: number) =>
     .trim()
     .refine((v) => v === "" || (!Number.isNaN(Number(v)) && Number(v) >= 0 && Number(v) <= max), `${label} must be a number from 0 to ${max}.`);
 
-const medicineSchema = z
+export const medicineSchema = z
   .object({
     name: z.string().trim().min(1, "Enter the medicine's name."),
     dosage: z.string().trim().min(1, "Enter the dose, like 1 tablet, 500 mg."),
@@ -61,6 +61,9 @@ export const onboardingSchema = z.object({
   familyPhone: z.string().trim().refine((v) => v === "" || isValidPhone(v), "Use a full number, like (214) 555-0134."),
   medicines: z.array(medicineSchema).min(1, "Add at least one medicine.").max(30),
 });
+
+/** The person's fields alone, for the dashboard's profile editor. */
+export const profileSchema = onboardingSchema.omit({ medicines: true });
 
 export type OnboardingValues = z.infer<typeof onboardingSchema>;
 

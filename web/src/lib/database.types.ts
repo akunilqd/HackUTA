@@ -1,4 +1,4 @@
-// Hand-written from the schema in ARGOS_FRONTEND_PLAN.md and supabase/002_dose_status.sql.
+// Hand-written from the schema in ARGOS_FRONTEND_PLAN.md and supabase/002_dose_status.sql and 005_doctor_appointments.sql.
 // Replace with `supabase gen types typescript --project-id <id> > src/lib/database.types.ts`
 // once the project credentials are available (see NOTES.md).
 
@@ -11,6 +11,9 @@ export type DoseStatus =
   | "unconfirmed"
   | "missed_no_answer"
   | "wrong_medication_flagged";
+
+/** supabase/005_doctor_appointments.sql check constraint. */
+export type AppointmentStatus = "scheduled" | "completed" | "cancelled" | "missed";
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -88,6 +91,34 @@ export type Database = {
           { foreignKeyName: "dose_logs_medication_id_fkey"; columns: ["medication_id"]; isOneToOne: false; referencedRelation: "user_medications"; referencedColumns: ["id"] },
         ];
       };
+      doctor_appointments: {
+        Row: {
+          id: string;
+          user_id: string;
+          doctor_name: string;
+          specialty: string | null;
+          location: string | null;
+          scheduled_at: string;
+          status: AppointmentStatus;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          doctor_name: string;
+          specialty?: string | null;
+          location?: string | null;
+          scheduled_at: string;
+          status?: AppointmentStatus;
+          notes?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["doctor_appointments"]["Insert"]>;
+        Relationships: [
+          { foreignKeyName: "doctor_appointments_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "users"; referencedColumns: ["id"] },
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -99,3 +130,4 @@ export type Database = {
 export type UserRow = Database["public"]["Tables"]["users"]["Row"];
 export type MedicationRow = Database["public"]["Tables"]["user_medications"]["Row"];
 export type DoseLogRow = Database["public"]["Tables"]["dose_logs"]["Row"];
+export type AppointmentRow = Database["public"]["Tables"]["doctor_appointments"]["Row"];

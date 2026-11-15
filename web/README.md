@@ -48,6 +48,28 @@ medicines on its own, because `getDueMedications()` reads every `user_medication
 **For the demo:** the iPhone number must be one Chert can call (a verified number), and the scheduler
 calls at each reminder time, so use your own phone and a time a few minutes ahead.
 
+## Dashboard (`/dashboard`)
+
+The **Open dashboard** button next to **Get started** opens a list of every patient. Each patient has four
+tabs, all readable and editable:
+
+| Tab | Route | Table | Edits |
+| --- | --- | --- | --- |
+| Patient profile | `/dashboard/{id}/profile` | `users` | name, phone, time zone, birth date, height, weight, family contact |
+| Prescriptions | `/dashboard/{id}/prescriptions` | `user_medications` | add, edit, delete medicines and reminder times |
+| Dose history | `/dashboard/{id}/history` | `dose_logs` | change a status, log a dose by hand, delete an entry (7/30/90-day range) |
+| Appointments | `/dashboard/{id}/appointments` | `doctor_appointments` | add, edit, delete doctor visits |
+
+Edits are Server Actions in `src/app/dashboard/actions.ts`. They use the same service-role key as
+onboarding, and each one checks that the row belongs to the patient in the URL. Times are shown and
+entered on the patient's own clock (`users.timezone`).
+
+`doctor_appointments` is new: run `../supabase/005_doctor_appointments.sql` once in the Supabase SQL
+editor. Until then the Appointments tab says so instead of failing.
+
+**No login:** anyone who can open the site can see and change every patient. That is fine for the
+hackathon demo; put a passcode or real sign-in in front of `/dashboard` before real patients use it.
+
 ## Deploy (Vercel)
 
 Set the root directory to `web` and add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` as environment
@@ -59,7 +81,8 @@ or a shared passcode before real use.
 - `src/app/page.tsx`: the landing page.
 - `src/app/onboarding/`: the three-step form (client) and its page.
 - `src/app/api/onboarding/route.ts`: the server save.
-- `src/lib/onboarding.ts`: validation rules shared by the form and the server.
+- `src/lib/onboarding.ts`: validation rules shared by the form, the server and the dashboard.
+- `src/app/dashboard/`: the dashboard pages and their Server Actions; `src/components/dashboard/`: its forms.
 - `public/art/ulysses-and-argus.jpg`: the hero art, Frederick Stacpoole's 1885 engraving after Briton
   Rivière (public domain, Wikimedia Commons / British Museum 2010,7081.6046), tinted to the palette.
 - `NOTES.md`: design and build notes. `../DESIGN.md`: the visual system.

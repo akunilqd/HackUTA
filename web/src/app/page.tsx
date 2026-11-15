@@ -20,9 +20,16 @@ export default function LandingPage() {
         <p className="rise rise-2 mt-6 max-w-[40ch] text-[1.2rem] text-cream md:text-[1.35rem]">
           At medication time, Pharmasee video-calls your parent, checks the bottle in their hand, and tells you they took it.
         </p>
-        <div className="rise rise-3 mt-8 w-full sm:w-auto">
+        <div className="rise rise-3 mt-8 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
           <ButtonLink href="/onboarding" className="w-full min-h-16 px-12 text-[1.15rem] sm:w-auto">
             Get started
+          </ButtonLink>
+          <ButtonLink
+            href="/dashboard"
+            variant="light"
+            className="w-full min-h-16 px-12 text-[1.15rem] sm:w-auto"
+          >
+            Open dashboard
           </ButtonLink>
         </div>
       </div>
