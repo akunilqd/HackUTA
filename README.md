@@ -1,84 +1,61 @@
-# Starter video agent
+# PharmaSee
 
-A voice agent with a face, for FaceTime Video calls through Chert. It is the voice
-starter plus one camera track: an animated face drawn in `face.mjs`. Node 22.23.2
-or later, Node 24 or Node 26 is required.
+An AI medication-reminder system: it phones the patient over FaceTime, checks that they hold the right
+medicine, and logs the dose. Families set the patient up on the website.
+
+```
+HackUTA/
+├─ my-agent/   Backend (Node): voice agent, scheduler, Supabase access, Chert/LiveKit calls
+├─ web/        Frontend (Next.js): landing page and onboarding, saves to Supabase
+├─ supabase/   Database SQL, run by hand in the Supabase SQL editor, in number order
+├─ docs/       SYSTEM_DESIGN.md (architecture), PLAN.md (backend build plan)
+├─ DESIGN.md   Visual system for the website
+└─ PRODUCT.md  Product brief for the website
+```
+
+## How the parts connect
+
+```
+web (onboarding form) ──POST /api/onboarding──▶ Supabase ◀── my-agent/scheduler.mjs (every minute)
+                         service role, server-only    │              │ creates dose_logs, places the call
+                                                      │              ▼
+                                                      └──── my-agent/agent.mjs ◀── Chert ◀── FaceTime
+                                                            (Gemini voice; writes dose_logs status)
+```
+
+Both sides use the same Supabase project and the same `users`, `user_medications` and `dose_logs` tables.
 
 ## Run it
 
-1. Install it:
-   ```sh
-   npm install
-   ```
-2. Create your private env file, then replace each `YOUR_` placeholder in it:
-   ```sh
-   cp .env.example .env.local && chmod 600 .env.local
-   ```
-   The three LiveKit values come from one LiveKit Cloud project (Settings, API
-   keys). The OpenAI key needs Realtime access and credits. Set `AGENT_NAME` to a
-   name no other team uses.
-3. Terminal 1, your agent:
-   ```sh
-   npm start
-   ```
-4. Terminal 2, in this same folder:
-   ```sh
-   chert login     # once per computer
-   chert dev
-   ```
-5. When `chert dev` says your agent is in a waiting room, make a **FaceTime Video**
-   call to the line it shows. The agent greets you as soon as FaceTime is ready. A
-   FaceTime Audio call works too, but the caller then only hears the agent.
+Backend (see `my-agent/README.md` for Chert and LiveKit setup):
 
-A few seconds into each call `chert dev` says what the Mac is taking from your
-agent: video and audio, audio only, or what is wrong.
-
-## The greeting
-
-The Mac ends a call that hears nothing from the agent within 10 seconds of
-FaceTime being ready (`remote_audio_timeout`). When the Mac reports `bridge_ready`,
-`chert dev` writes `"chert_bridge_ready": true` into the room metadata, and the
-agent greets once (`greet.mjs`, the `greeting` line in `agent.mjs`). It never
-greets just because the caller joined. Without the signal it does not greet,
-and the caller speaks first.
-
-## The one rule for video
-
-The Mac that answers FaceTime takes audio from the **one** participant that
-publishes an audio track, and shows video **only from that same participant**.
-
-- This starter follows the rule: the agent publishes its own voice and its own camera track.
-- Two participants publishing audio ends the call.
-- Video from a participant that does not speak is not shown.
-
-## Change the picture
-
-Edit `drawFace` in `face.mjs`. It returns one RGBA frame, 640 by 360, 15 times a
-second. Draw anything: an image, a chart, a game board.
-
-## Use a realtime avatar instead
-
-LiveKit has plugins for avatar services (Tavus, Beyond Presence, Anam and others).
-The avatar joins the room as a third participant and publishes the voice and the
-face together, which fits the rule above. LiveKit admits it to a Chert room.
-
-```js
-import * as bey from '@livekit/agents-plugin-bey';   // Beyond Presence; needs BEY_API_KEY
-
-const avatar = new bey.AvatarSession({ avatarId: '...' });
-await avatar.start(session, ctx.room);   // before session.start
+```sh
+cd my-agent
+npm install
+# create .env.local with the LiveKit, Gemini, Chert and Supabase keys (see my-agent/README.md)
+npm run seed                    # demo patient
+npm start                       # agent
+npm run scheduler               # reminders (second terminal)
 ```
 
-The plugins and their options are listed at https://docs.livekit.io/agents/models/avatar/.
+Frontend:
 
-Remove the `VideoSource` code when you do this, and keep the agent's own audio
-output off the room (the plugin does that), so that only the avatar speaks. Each
-service needs its own account and API key. This path has not been tested on a
-FaceTime call by Chert yet: watch the media line in `chert dev` on your first call.
+```sh
+cd web
+npm install
+cp .env.example .env.local      # SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, the same values as the backend
+npm run dev                     # http://localhost:3000
+```
 
-## What it does not do
+## Database
 
-- It does not look at the caller's camera.
-- The waiting room shows that the agent joined LiveKit. It does not verify the
-  model key or the media path. The first call does.
-- Never commit or share `.env.local`. LiveKit and model usage may cost money.
+Run the files in `supabase/` once, in order. All are safe to run again.
+
+| File | What it does | Used by |
+|---|---|---|
+| `001_pharmasee.sql` | `users.phone`, unique `(medication_id, scheduled_at)` on `dose_logs` | backend |
+| `002_dose_status.sql` | extra `dose_logs.status` values for reminder calls | backend |
+| `003_meal_timing.sql` | `user_medications.after_meal` (`Yes` / `No`) | backend and web |
+| `004_web_app.sql` | optional: photo and family-name columns, RLS, photo bucket. **Proposed, not applied.** | later web pages |
+
+Each side keeps its own `.env.local` (git-ignored). The web app only needs the two Supabase values.

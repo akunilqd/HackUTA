@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PharmaSee face preview</title>
+<style>
+  :root { --bg: #fafaf8; --fg: #1c1c1a; --muted: #6b6b66; --card: #fff; --line: #e4e4de; --accent: #1f6f4a; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #151514; --fg: #ecece8; --muted: #9a9a94; --card: #1e1e1c; --line: #34342f; --accent: #5cc796; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.sub { margin: 0 0 16px; color: var(--muted); }
+  img { height: min(75vh, 720px); max-width: 100%; aspect-ratio: 9 / 16; border-radius: 10px; background: #000; display: block; margin: 0 auto; }
+  .controls { display: grid; gap: 12px; margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .row span { width: 90px; color: var(--muted); font-size: 13px; }
+  button { font: inherit; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  input[type=range] { flex: 1; min-width: 200px; }
+  output { width: 56px; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Face preview</h1>
+  <p class="sub">The agent's video, drawn by face.mjs, without a call. Real calls trigger these reactions from the medication tools.</p>
+  <img src="/face/stream" alt="The agent's animated dog">
+  <div class="controls">
+    <div class="row" id="events"><span>Reaction</span></div>
+    <div class="row"><span>Speaking</span><button id="speak" aria-pressed="false">Talking</button></div>
+    <div class="row"><span>Time of day</span>
+      <input type="range" id="hour" min="0" max="24" step="0.25" value="12"><output id="hourOut">12:00</output>
+      <button id="now">Use clock</button>
+    </div>
+  </div>
+</main>
+<script>
+  const set = query => fetch(`/face/set?${query}`, { method: 'POST' });
+  const events = [
+    ['idle', 'Idle'], ['waiting', 'Waiting for bottle'], ['looking', 'Reading label'], ['matched', 'Label matched'],
+    ['wrong', 'Wrong medicine'], ['confirmed', 'Dose confirmed'], ['done', 'All doses done'],
+  ];
+  for (const [event, label] of events) {
+    const button = document.createElement('button');
+    button.textContent = label;
+    button.onclick = () => set(`event=${event}`);
+    document.getElementById('events').appendChild(button);
+  }
+  const speak = document.getElementById('speak');
+  speak.onclick = () => {
+    const on = speak.getAttribute('aria-pressed') !== 'true';
+    speak.setAttribute('aria-pressed', String(on));
+    set(`speaking=${on ? 1 : 0}`);
+  };
+  const hour = document.getElementById('hour'), out = document.getElementById('hourOut');
+  const show = h => { out.textContent = `${String(Math.floor(h)).padStart(2, '0')}:${String(Math.round((h % 1) * 60)).padStart(2, '0')}`; };
+  hour.oninput = () => { show(Number(hour.value)); set(`hour=${hour.value}`); };
+  document.getElementById('now').onclick = () => { out.textContent = 'clock'; set('hour=now'); };
+  set('hour=12'); show(12);
+  // The preview costs a full CPU core while it streams (JPEG encoding in JavaScript), so stop it when the tab is hidden.
+  const img = document.querySelector('img');
+  document.addEventListener('visibilitychange', () => { img.src = document.hidden ? '' : `/face/stream?${Date.now()}`; });
+</script>
+</body>
+</html>

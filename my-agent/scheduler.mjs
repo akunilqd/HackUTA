@@ -41,11 +41,11 @@ async function attemptCall(group) {
       log(`line not ready (${health.reason}); not dialing, will check again next minute`);
       return 'infra_error';
     }
-    const { callId } = await startReminderCall({
+    const { callId, video } = await startReminderCall({
       phone: group.user.phone,
       metadata: { userId: group.user.id, doseLogIds: group.doseLogIds },
     });
-    log(`calling ${group.user.name}, call ${callId}`);
+    log(`calling ${group.user.name} (${video ? 'video' : 'AUDIO ONLY: Chert refused video'}), call ${callId}`);
     const result = await watchCall(callId);
     // Hang up a call that never connected so it cannot keep the shared line busy.
     if (result === 'unanswered') await endCall(callId).catch(error => log(`end call failed: ${error.message}`));

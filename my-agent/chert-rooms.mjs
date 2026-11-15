@@ -25,7 +25,12 @@ export function usesOwnLiveKit(env = process.env) {
  * @param {{ file: string, agentName: string }} options
  */
 export function runAgent(agent, { file, agentName }) {
-  if (usesOwnLiveKit()) return cli.runApp(new ServerOptions({ agent: file, agentName }));
+  // One warm spare process instead of the production default of four: each idle process holds ~110 MB, and on a
+  // laptop short of RAM they kept missing the 10 s start-up limit and being respawned mid-call, which starved the
+  // call's audio. chert dev already keeps a waiting room with the agent in it, so one spare is enough.
+  if (usesOwnLiveKit()) {
+    return cli.runApp(new ServerOptions({ agent: file, agentName, numIdleProcesses: 1, initializeProcessTimeout: 30_000 }));
+  }
   return serveChertRooms(agent, agentName);
 }
 

@@ -24,10 +24,11 @@ export async function loadDoses(ctx) {
     id: row.id,
     name: row.user_medications.name,
     dosage: row.user_medications.dosage,
+    afterMeal: row.user_medications.after_meal === 'Yes',
     patient: row.user_medications.users?.name,
     timezone: row.user_medications.users?.timezone,
   }));
-  return { doses, patientName: doses[0]?.patient ?? 'there', timezone: doses[0]?.timezone, outbound: Boolean(meta.doseLogIds?.length) };
+  return { doses, patientName: doses[0]?.patient ?? 'there', timezone: doses[0]?.timezone, outbound: Boolean(meta.doseLogIds?.length), test: Boolean(meta.test) };
 }
 
 const normalize = text => String(text ?? '').toLowerCase().replace(/[^a-z]/g, '');
@@ -61,21 +62,28 @@ const dayPart = timezone => {
 };
 
 /** The first thing said, once FaceTime is ready. Kept to one sentence: the Mac ends silent calls quickly. */
-export function buildGreeting({ doses, patientName, timezone }) {
+/** The exact words of the greeting. Played as a pre-rendered clip, so the name "Argos" is always said. */
+export function greetingLine({ doses, patientName, timezone }) {
   const hello = `${dayPart(timezone)}, ${patientName}`;
   return doses.length
-    ? `Say this in your own warm words, in one short sentence: "${hello}, this is PharmaSee, your AI medication helper. It is time for your medicine." Then wait for their reply before anything else.`
-    : `Say in one short sentence: "${hello}, this is PharmaSee, an AI helper. Nothing is due right now. Take care, goodbye."`;
+    ? `${hello}. I'm Argos. I'm your AI medication helper from PharmaSee. It is time for your medicine.`
+    : `${hello}. I'm Argos, your AI helper from PharmaSee. Nothing is due right now. Take care, goodbye.`;
 }
 
-export function buildInstructions({ doses, patientName }) {
-  if (!doses.length) {
-    return `You are PharmaSee, a warm AI medication helper on a FaceTime call with ${patientName}.
-There are no medications due right now. Say so in one short sentence, wish them well and say goodbye. You are an AI; say so if asked.`;
-  }
-  const list = doses.map(d => `${d.number}. ${d.name} - ${d.dosage}`).join('\n');
-  return `You are PharmaSee, a warm, patient AI medication helper on a FaceTime call with ${patientName}, an older adult. You are an AI; say so if asked.
 
+/** `opening`: the exact first line of the call (only for a new call, not when reconnecting mid-call). */
+export function buildInstructions({ doses, patientName, opening }) {
+  if (!doses.length) {
+    return `You are Argos, a warm AI medication helper from PharmaSee, on a FaceTime call with ${patientName}. You are an AI; say so if asked.
+${opening ? `Your first words in this call are exactly: "${opening}" Then stop.` : 'There are no medications due right now. Say so in one short sentence, wish them well and say goodbye.'}`;
+  }
+  const list = doses.map(d => `${d.number}. ${d.name} - ${d.dosage}${d.afterMeal ? ' - TAKE AFTER A MEAL' : ''}`).join('\n');
+  return `You are Argos, a warm, patient AI medication helper from PharmaSee, on a FaceTime call with ${patientName}, an older adult. Your name is Argos (you appear on screen as a friendly cartoon dog). You are an AI; say so if asked.
+${opening ? `
+OPENING (your very first turn)
+Your first words in this call are exactly: "${opening}"
+Say nothing else in that first turn: do not ask for a medicine yet. Then wait for their reply. Once it has been said (by you or played for you), never repeat it.
+` : ''}
 HOW TO SPEAK
 - Speak slowly in short, plain sentences, at most two at a time, about 25 words or fewer per turn unless you are giving the dose. Ask one question at a time and wait for the answer.
 - Answer right away; do not announce that you are about to check something.
@@ -88,13 +96,12 @@ MEDICATIONS DUE NOW (from the patient's record, in this order)
 ${list}
 
 FOR EACH MEDICATION, ONE AT A TIME (do not mention the next one until this one is confirmed)
-1. Ask them to pick up the bottle or package and hold the label close to the camera, steady, in good light. Then call check_medication_on_camera. If it says there is no video, or the label is not legible, ask them to read the medication name aloud. After two failed attempts, ask them to read it letter by letter.
+1. Ask them to pick up the bottle or package and hold the label close to the camera, steady, in good light. When they show it, say only "Let me take a look." and then call check_medication_on_camera; reading the label takes a few seconds, so this keeps them from wondering whether you heard. If it says there is no video, or the label is not legible, ask them to read the medication name aloud. After two failed attempts, ask them to read it letter by letter.
 2. THE TOOLS ARE MANDATORY. Every time the patient shows, reads, or names a medicine, you MUST call verify_spoken_medication_name (or use the camera result) with the number of the medicine you are checking and the name you heard, BEFORE you say whether it is right. Say nothing about a match until the tool has answered. Never judge a match yourself.
-3. If matchesExpected is true: say the exact dose from the list, for example "Please take two tablets of Metformin."
+3. Meal timing is private until the medicine is verified: never mention eating, meals or "after a meal" before the tool has said matchesExpected is true for that medication, not when greeting, asking them to show the bottle, or when it does not match. If matchesExpected is true: if the list marks the medication TAKE AFTER A MEAL, FIRST say a short reminder that it should be taken after eating, for example "This one is best taken after you have eaten.", and ask whether they have eaten; if they have not eaten yet, tell them to eat first and take it afterwards, and do not call confirm_dose_taken until they have taken it. THEN say the exact dose from the list, for example "Please take two tablets of Metformin."
 4. If matchesExpected is false: you MUST call flag_wrong_medication, then kindly say that it does not look like the right medicine and ask them to put it down and look for the right one. Never tell them to take a medication that did not match. When they find another bottle, go back to step 1.
 5. Ask them to take it now with water and tell you when they have. When they clearly say they took it, you MUST call confirm_dose_taken before replying. "Okay" or "yes" to your instructions is not confirmation; ask "Did you take it?".
-The record is how their caregiver knows what happened, so never skip a tool call. After every medication is confirmed, thank them warmly, remind them you will check in again at the next dose, and say goodbye.
-6. After finishing taking the medicine, you should say thank you and remind them the next medicine schedule.
+The record is how their caregiver knows what happened, so never skip a tool call. After the last medication is confirmed, praise them in one short warm sentence and stop; the closing goodbye and the reminder about the next dose are said for you.
 
 SAFETY RULES (these override everything above)
 - Never advise a dose different from the list. Never suggest taking extra, doubling, skipping, or stopping. Never give medical advice or diagnoses.
@@ -104,14 +111,15 @@ SAFETY RULES (these override everything above)
 }
 
 /**
- * @param {{ doses: any[], room: any, callerIdentity: string, onProgress: () => void, onAllConfirmed: () => void }} args
+ * onEvent hears what the patient's video should react to: waiting, looking, matched, wrong, confirmed, done.
+ * @param {{ doses: any[], room: any, callerIdentity: string, onProgress: () => void, onAllConfirmed: () => void, onEvent?: (event: string) => void }} args
  */
-export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfirmed }) {
+export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfirmed, onEvent = () => {}, test = false }) {
   const confirmed = new Set();
   const byNumber = number => doses.find(d => d.number === number);
   const number = z.number().int().describe('The medication number from the list');
   // A mismatch is recorded by the checking tools themselves, so the record never depends on the model remembering a second call.
-  const flagWrong = async dose => { if (!confirmed.has(dose.id)) await setDoseStatus(dose.id, 'wrong_medication_flagged'); };
+  const flagWrong = async dose => { if (!confirmed.has(dose.id)) await setDoseStatus(dose.id, 'wrong_medication_flagged', { notify: !test }); };
 
   const tools = {
     check_medication_on_camera: llm.tool({
@@ -121,10 +129,14 @@ export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfi
         onProgress();
         const dose = byNumber(medicationNumber);
         if (!dose) return { error: 'unknown medication number' };
+        onEvent('looking');
         const seen = await identifyMedication(room, callerIdentity);
+        if (!seen.video || !seen.name) onEvent('waiting');
         if (!seen.video) return { video: false, instruction: 'No camera video. Ask the patient to read the medication name aloud.' };
+        if (seen.error) return { video: true, readable: false, instruction: 'The label cannot be read on camera right now. Ask the patient to read the medication name aloud.' };
         if (!seen.name) return { video: true, readable: false, instruction: 'Label not legible. Ask them to hold it closer and steadier, or read it aloud.' };
         const matchesExpected = sameMedication(seen.name, dose.name);
+        onEvent(matchesExpected ? 'matched' : 'wrong');
         if (!matchesExpected) await flagWrong(dose);
         return { video: true, readable: true, seenName: seen.name, matchesExpected };
       },
@@ -138,6 +150,7 @@ export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfi
         const dose = byNumber(medicationNumber);
         if (!dose) return { error: 'unknown medication number' };
         const matchesExpected = sameMedication(spokenName, dose.name);
+        onEvent(matchesExpected ? 'matched' : 'wrong');
         if (!matchesExpected) await flagWrong(dose);
         return { matchesExpected };
       },
@@ -150,6 +163,7 @@ export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfi
         onProgress();
         const dose = byNumber(medicationNumber);
         if (!dose) return { recorded: false };
+        onEvent('wrong');
         await flagWrong(dose);
         return { recorded: true };
       },
@@ -162,9 +176,10 @@ export function buildTools({ doses, room, callerIdentity, onProgress, onAllConfi
         onProgress();
         const dose = byNumber(medicationNumber);
         if (!dose) return { error: 'unknown medication number' };
-        await setDoseStatus(dose.id, 'taken', { takenAt: new Date().toISOString() });
+        await setDoseStatus(dose.id, 'taken', { takenAt: new Date().toISOString(), notify: !test });
         confirmed.add(dose.id);
         const remaining = doses.filter(d => !confirmed.has(d.id)).map(d => d.number);
+        onEvent(remaining.length ? 'confirmed' : 'done');
         if (!remaining.length) onAllConfirmed();
         return { recorded: true, remainingMedicationNumbers: remaining };
       },

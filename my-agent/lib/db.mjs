@@ -56,7 +56,7 @@ export async function createDoseLogs(rows) {
 export async function getDoseContext(doseLogIds) {
   const { data, error } = await supabase
     .from('dose_logs')
-    .select('id, status, scheduled_at, user_medications(id, name, dosage, users(id, name, phone, timezone))')
+    .select('id, status, scheduled_at, user_medications(id, name, dosage, after_meal, users(id, name, phone, timezone))')
     .in('id', doseLogIds);
   if (error) fail('getDoseContext', error);
   return data;
@@ -67,7 +67,7 @@ export async function getOpenDoses(userId) {
   const since = new Date(Date.now() - 24 * 3600_000).toISOString();
   const { data, error } = await supabase
     .from('dose_logs')
-    .select('id, status, scheduled_at, user_medications!inner(id, name, dosage, user_id, users(id, name, phone, timezone))')
+    .select('id, status, scheduled_at, user_medications!inner(id, name, dosage, after_meal, user_id, users(id, name, phone, timezone))')
     .eq('user_medications.user_id', userId)
     .in('status', OPEN)
     .gte('scheduled_at', since)
@@ -81,7 +81,7 @@ export async function getPendingDoses(windowMinutes = 15) {
   const since = new Date(Date.now() - windowMinutes * 60_000).toISOString();
   const { data, error } = await supabase
     .from('dose_logs')
-    .select('id, status, scheduled_at, user_medications!inner(id, name, dosage, user_id, users(id, name, phone, timezone))')
+    .select('id, status, scheduled_at, user_medications!inner(id, name, dosage, after_meal, user_id, users(id, name, phone, timezone))')
     .eq('status', 'pending')
     .lte('scheduled_at', new Date().toISOString())
     .gte('scheduled_at', since);
@@ -107,8 +107,20 @@ export async function getDoseStatuses(ids) {
   return data;
 }
 
-export async function setDoseStatus(ids, status, { takenAt } = {}) {
+/**
+ * The single place dose statuses change. Doses that really changed to a reportable status are announced to the
+ * patient's family; `notify: false` (test sessions) keeps that silent.
+ */
+export async function setDoseStatus(ids, status, { takenAt, notify = true } = {}) {
+  ids = [].concat(ids);
+  const { NOTIFY_STATUSES, notifyFamily } = await import('./family-notify.mjs'); // lazy: it imports this file
+  let changed = [];
+  if (notify && NOTIFY_STATUSES.has(status)) {
+    const { data } = await supabase.from('dose_logs').select('id, status').in('id', ids);
+    changed = (data ?? []).filter(d => d.status !== status).map(d => d.id);
+  }
   const patch = { status, ...(takenAt ? { taken_at: takenAt } : {}) };
-  const { error } = await supabase.from('dose_logs').update(patch).in('id', [].concat(ids));
+  const { error } = await supabase.from('dose_logs').update(patch).in('id', ids);
   if (error) fail('setDoseStatus', error);
+  notifyFamily(changed, status);
 }

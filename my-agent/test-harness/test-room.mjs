@@ -3,7 +3,9 @@
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { AccessToken, AgentDispatchClient, RoomServiceClient } from 'livekit-server-sdk';
+import jpeg from 'jpeg-js';
 import { supabase } from '../lib/db.mjs';
+import { configure as configureFace, drawFace, FPS, HEIGHT, react, WIDTH } from '../face.mjs';
 
 const { LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET, DEMO_USER_ID } = process.env;
 const AGENT_NAME = process.env.AGENT_NAME || 'my-agent';
@@ -42,7 +44,7 @@ async function startSession() {
 
   testRoom = `test-${Date.now()}`;
   await new AgentDispatchClient(LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET).createDispatch(testRoom, AGENT_NAME, {
-    metadata: JSON.stringify({ userId: DEMO_USER_ID, doseLogIds: testDoseIds }),
+    metadata: JSON.stringify({ userId: DEMO_USER_ID, doseLogIds: testDoseIds, test: true }), // test: never message the family
   });
   const token = new AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET, { identity: `tester-${Date.now()}`, ttl: 1800 });
   token.addGrant({ roomJoin: true, room: testRoom, canPublish: true, canSubscribe: true });
@@ -57,6 +59,30 @@ async function doseStatuses() {
   return data.map(d => ({ name: d.user_medications.name, dosage: d.user_medications.dosage, status: d.status, takenAt: d.taken_at }));
 }
 
+// Face preview: draws the agent's video here, in this process, as an MJPEG stream; no LiveKit, no model.
+const preview = { speaking: false, clients: new Set(), tick: 0, timer: undefined };
+
+function streamFace(req, res) {
+  res.writeHead(200, { 'content-type': 'multipart/x-mixed-replace; boundary=frame', 'cache-control': 'no-store' });
+  preview.clients.add(res);
+  req.on('close', () => preview.clients.delete(res));
+  preview.timer ??= setInterval(() => {
+    if (!preview.clients.size) { clearInterval(preview.timer); preview.timer = undefined; return; }
+    let image;
+    try { image = jpeg.encode({ data: drawFace(preview.tick++, preview.speaking), width: WIDTH, height: HEIGHT }, 80).data; }
+    catch (error) { console.error('[face preview]', error); return; }
+    for (const client of preview.clients) client.write(`--frame\r\ncontent-type: image/jpeg\r\ncontent-length: ${image.length}\r\n\r\n`), client.write(image), client.write('\r\n');
+  }, 1000 / FPS);
+}
+
+function setFace(url) {
+  const params = new URL(url, 'http://localhost').searchParams;
+  if (params.has('event')) react(params.get('event'));
+  if (params.has('hour')) configureFace({ hour: params.get('hour') === 'now' ? null : Number(params.get('hour')) });
+  if (params.has('speaking')) preview.speaking = params.get('speaking') === '1';
+  return { ok: true };
+}
+
 const send = (res, status, body, type = 'application/json') => {
   res.writeHead(status, { 'content-type': type });
   res.end(type === 'application/json' ? JSON.stringify(body) : body);
@@ -68,6 +94,9 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url === '/livekit-client.js') {
       return send(res, 200, await readFile(new URL('../node_modules/livekit-client/dist/livekit-client.umd.js', import.meta.url), 'utf8'), 'text/javascript');
     }
+    if (req.method === 'GET' && req.url === '/face') return send(res, 200, await readFile(new URL('./face-preview.html', import.meta.url), 'utf8'), 'text/html; charset=utf-8');
+    if (req.method === 'GET' && req.url.startsWith('/face/stream')) return streamFace(req, res);
+    if (req.method === 'POST' && req.url.startsWith('/face/set')) return send(res, 200, setFace(req.url));
     if (req.method === 'POST' && req.url === '/session') return send(res, 200, await startSession());
     if (req.method === 'GET' && req.url === '/doses') return send(res, 200, await doseStatuses());
     send(res, 404, { error: 'not found' });
@@ -78,7 +107,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 // Local only: the page gets a LiveKit token, so it must not be reachable from the network.
-server.listen(PORT, '127.0.0.1', () => console.log(`Test harness: http://localhost:${PORT}  (Ctrl+C removes the test dose_logs)`));
+server.listen(PORT, '127.0.0.1', () => console.log(`Test harness: http://localhost:${PORT}  (Ctrl+C removes the test dose_logs)\nFace preview: http://localhost:${PORT}/face`));
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, async () => { await cleanup(); process.exit(0); });

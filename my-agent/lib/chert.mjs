@@ -2,14 +2,14 @@ import { randomUUID } from 'node:crypto';
 
 const API = 'https://app.trychert.com/api/v1';
 
-async function request(path, { method = 'GET', body } = {}) {
+async function request(path, { method = 'GET', body, idempotencyKey } = {}) {
   const response = await fetch(`${API}${path}`, {
     method,
     headers: {
       authorization: `Bearer ${process.env.CHERT_API_KEY}`,
       'x-chert-project-id': process.env.CHERT_PROJECT_ID,
       'content-type': 'application/json',
-      ...(method === 'POST' ? { 'idempotency-key': randomUUID() } : {}),
+      ...(method === 'POST' ? { 'idempotency-key': idempotencyKey ?? randomUUID() } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
   });
@@ -42,6 +42,6 @@ export const getCall = id => request(`/calls/${id}`);
 /** Asks Chert to end a call (202 only acknowledges; keep reading the call until it is terminal). */
 export const endCall = id => request(`/calls/${id}/end`, { method: 'POST', body: {} });
 
-export async function sendMessage({ lineId, recipient, text }) {
-  return request('/shared-messages', { method: 'POST', body: { line_id: lineId, recipient, text } });
+export async function sendMessage({ lineId, recipient, text, idempotencyKey }) {
+  return request('/shared-messages', { method: 'POST', body: { line_id: lineId, recipient, text }, idempotencyKey });
 }

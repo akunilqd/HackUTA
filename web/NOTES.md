@@ -4,7 +4,7 @@
 
 - **No web frontend existed.** `HackUTA/ui/` is a Python sidecar that renders the agent's *video face* for FaceTime (scenes, captions, clips), not a website. The top-level `Documents/*.html` files belong to a different project (Goodminton/strung).
 - **Backend:** Node 22 ESM in `HackUTA/`. `agent.mjs` (LiveKit + Gemini voice agent), `scheduler.mjs` (cron: creates `dose_logs` rows and places outbound Chert calls), `lib/db.mjs` (all Supabase access), `lib/vision.mjs` (reads the label text off camera frames with Gemini; it does **not** compare against a reference photo today), `seed.mjs` (demo patient "Margaret" + two medications via `auth.admin.createUser`).
-- **Supabase connection:** `lib/db.mjs` uses `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` from `.env.local`. On this machine `.env.local` still holds the `your_project.supabase.co` placeholder, so I **could not introspect the live schema, RLS, or storage**. Everything below is based on the plan + the two SQL files in `HackUTA/supabase/`.
+- **Supabase connection:** `lib/db.mjs` uses `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` from `.env.local`. On this machine `.env.local` still holds the `your_project.supabase.co` placeholder, so I **could not introspect the live schema, RLS, or storage**. Everything below is based on the plan + the two SQL files in `supabase/`.
 - **No HTTP server in the backend.** There is no `/demo/call` endpoint; `call-me.mjs` / `place-call-setup.mjs` are CLI scripts. The "Call now" button (F3) needs a tiny endpoint added to the backend, or a Next.js route handler that calls Chert directly with a server-side `CHERT_API_KEY`. Decide at F3.
 - **Statuses the agent writes** (`supabase/002_dose_status.sql`): `pending, taken, missed, skipped, calling, unconfirmed, missed_no_answer, wrong_medication_flagged`. A DB check also requires `taken_at` only with `status = 'taken'`. The plan's `corrected` / `escalated` do not exist.
 - `users.id = auth.users.id` (seed creates an auth user first), which fits magic-link sign-in: the signed-in family member *is* the `users` row. Note that this means the **row represents the patient but is owned by whoever signs in**; one account = one patient for now.
@@ -27,7 +27,7 @@
 
 ## Proposed schema changes — NOT applied, waiting for your go-ahead
 
-`web/supabase/migrations/0001_web_app.sql`:
+`supabase/004_web_app.sql`:
 
 1. `user_medications.photo_path text`, `user_medications.appearance text`, `users.family_name text`.
 2. Enable RLS on all three tables with own-row policies (`dose_logs` read-only for the web; the agent's service role bypasses RLS).

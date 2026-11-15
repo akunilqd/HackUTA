@@ -15,6 +15,7 @@
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; flex: 1 1 280px; }
   .card h2 { font-size: 13px; font-weight: 600; margin: 0 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
   video { width: 100%; background: #000; border-radius: 6px; aspect-ratio: 16 / 9; }
+  #agentVideo video { aspect-ratio: 9 / 16; width: auto; max-width: 100%; height: min(70vh, 560px); display: block; margin: 0 auto; }
   button { font: inherit; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: var(--accent); color: #fff; cursor: pointer; }
   button.ghost { background: transparent; color: var(--fg); }
   button:disabled { opacity: .5; cursor: default; }
@@ -31,7 +32,7 @@
 <body>
 <main>
   <h1>PharmaSee test harness</h1>
-  <p class="sub">Talks to the agent straight through LiveKit (no Chert, no FaceTime). Use headphones to avoid echo.</p>
+  <p class="sub">Talks to the agent straight through LiveKit (no Chert, no FaceTime). Use headphones to avoid echo. <a href="/face">Face preview</a></p>
   <div class="bar">
     <button id="start">Start call</button>
     <button id="stop" class="ghost" disabled>Hang up</button>
