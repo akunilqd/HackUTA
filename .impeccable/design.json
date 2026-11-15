@@ -1,0 +1,467 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T00:00:00Z",
+  "title": "Design System: ARGOS",
+  "extensions": {
+    "colorMeta": {
+      "cream": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "canonical": "oklch(93.6% 0.032 87.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 87.3)",
+          "oklch(26.4% 0.012 87.3)",
+          "oklch(37.9% 0.020 87.3)",
+          "oklch(49.3% 0.028 87.3)",
+          "oklch(60.7% 0.028 87.3)",
+          "oklch(72.1% 0.020 87.3)",
+          "oklch(83.6% 0.012 87.3)",
+          "oklch(95.0% 0.008 87.3)"
+        ]
+      },
+      "cream-deep": {
+        "role": "neutral",
+        "displayName": "Cream Deep",
+        "canonical": "oklch(89.7% 0.043 88.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 88.0)",
+          "oklch(26.4% 0.016 88.0)",
+          "oklch(37.9% 0.027 88.0)",
+          "oklch(49.3% 0.038 88.0)",
+          "oklch(60.7% 0.038 88.0)",
+          "oklch(72.1% 0.027 88.0)",
+          "oklch(83.6% 0.016 88.0)",
+          "oklch(95.0% 0.011 88.0)"
+        ]
+      },
+      "glaze": {
+        "role": "neutral",
+        "displayName": "Glaze",
+        "canonical": "oklch(22.1% 0.009 59.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 59.2)",
+          "oklch(26.4% 0.007 59.2)",
+          "oklch(37.9% 0.012 59.2)",
+          "oklch(49.3% 0.017 59.2)",
+          "oklch(60.7% 0.017 59.2)",
+          "oklch(72.1% 0.012 59.2)",
+          "oklch(83.6% 0.007 59.2)",
+          "oklch(95.0% 0.005 59.2)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(38.5% 0.017 67.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 67.3)",
+          "oklch(26.4% 0.007 67.3)",
+          "oklch(37.9% 0.012 67.3)",
+          "oklch(49.3% 0.017 67.3)",
+          "oklch(60.7% 0.017 67.3)",
+          "oklch(72.1% 0.012 67.3)",
+          "oklch(83.6% 0.007 67.3)",
+          "oklch(95.0% 0.005 67.3)"
+        ]
+      },
+      "terracotta": {
+        "role": "primary",
+        "displayName": "Terracotta",
+        "canonical": "oklch(61.5% 0.139 42.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.035 42.0)",
+          "oklch(26.4% 0.051 42.0)",
+          "oklch(37.9% 0.086 42.0)",
+          "oklch(49.3% 0.121 42.0)",
+          "oklch(60.7% 0.121 42.0)",
+          "oklch(72.1% 0.086 42.0)",
+          "oklch(83.6% 0.051 42.0)",
+          "oklch(95.0% 0.035 42.0)"
+        ]
+      },
+      "terracotta-deep": {
+        "role": "primary",
+        "displayName": "Terracotta Deep",
+        "canonical": "oklch(52.5% 0.134 40.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.033 40.7)",
+          "oklch(26.4% 0.049 40.7)",
+          "oklch(37.9% 0.083 40.7)",
+          "oklch(49.3% 0.117 40.7)",
+          "oklch(60.7% 0.117 40.7)",
+          "oklch(72.1% 0.083 40.7)",
+          "oklch(83.6% 0.049 40.7)",
+          "oklch(95.0% 0.033 40.7)"
+        ]
+      },
+      "terracotta-pressed": {
+        "role": "primary",
+        "displayName": "Terracotta Pressed",
+        "canonical": "oklch(47.8% 0.125 40.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.031 40.2)",
+          "oklch(26.4% 0.046 40.2)",
+          "oklch(37.9% 0.077 40.2)",
+          "oklch(49.3% 0.109 40.2)",
+          "oklch(60.7% 0.109 40.2)",
+          "oklch(72.1% 0.077 40.2)",
+          "oklch(83.6% 0.046 40.2)",
+          "oklch(95.0% 0.031 40.2)"
+        ]
+      },
+      "aegean": {
+        "role": "secondary",
+        "displayName": "Aegean",
+        "canonical": "oklch(51.9% 0.100 244.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 244.3)",
+          "oklch(26.4% 0.037 244.3)",
+          "oklch(37.9% 0.062 244.3)",
+          "oklch(49.3% 0.087 244.3)",
+          "oklch(60.7% 0.087 244.3)",
+          "oklch(72.1% 0.062 244.3)",
+          "oklch(83.6% 0.037 244.3)",
+          "oklch(95.0% 0.025 244.3)"
+        ]
+      },
+      "aegean-deep": {
+        "role": "secondary",
+        "displayName": "Aegean Deep",
+        "canonical": "oklch(46.8% 0.090 244.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.022 244.2)",
+          "oklch(26.4% 0.033 244.2)",
+          "oklch(37.9% 0.056 244.2)",
+          "oklch(49.3% 0.078 244.2)",
+          "oklch(60.7% 0.078 244.2)",
+          "oklch(72.1% 0.056 244.2)",
+          "oklch(83.6% 0.033 244.2)",
+          "oklch(95.0% 0.022 244.2)"
+        ]
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Gold",
+        "canonical": "oklch(75.0% 0.122 82.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.030 82.2)",
+          "oklch(26.4% 0.044 82.2)",
+          "oklch(37.9% 0.075 82.2)",
+          "oklch(49.3% 0.106 82.2)",
+          "oklch(60.7% 0.106 82.2)",
+          "oklch(72.1% 0.075 82.2)",
+          "oklch(83.6% 0.044 82.2)",
+          "oklch(95.0% 0.030 82.2)"
+        ]
+      },
+      "olive": {
+        "role": "tertiary",
+        "displayName": "Olive",
+        "canonical": "oklch(60.5% 0.099 132.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.025 132.2)",
+          "oklch(26.4% 0.036 132.2)",
+          "oklch(37.9% 0.061 132.2)",
+          "oklch(49.3% 0.086 132.2)",
+          "oklch(60.7% 0.086 132.2)",
+          "oklch(72.1% 0.061 132.2)",
+          "oklch(83.6% 0.036 132.2)",
+          "oklch(95.0% 0.025 132.2)"
+        ]
+      },
+      "olive-deep": {
+        "role": "tertiary",
+        "displayName": "Olive Deep",
+        "canonical": "oklch(44.7% 0.088 134.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.022 134.4)",
+          "oklch(26.4% 0.032 134.4)",
+          "oklch(37.9% 0.055 134.4)",
+          "oklch(49.3% 0.077 134.4)",
+          "oklch(60.7% 0.077 134.4)",
+          "oklch(72.1% 0.055 134.4)",
+          "oklch(83.6% 0.032 134.4)",
+          "oklch(95.0% 0.022 134.4)"
+        ]
+      },
+      "red": {
+        "role": "tertiary",
+        "displayName": "Soft Red",
+        "canonical": "oklch(54.5% 0.145 29.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.036 29.8)",
+          "oklch(26.4% 0.053 29.8)",
+          "oklch(37.9% 0.090 29.8)",
+          "oklch(49.3% 0.126 29.8)",
+          "oklch(60.7% 0.126 29.8)",
+          "oklch(72.1% 0.090 29.8)",
+          "oklch(83.6% 0.053 29.8)",
+          "oklch(95.0% 0.036 29.8)"
+        ]
+      },
+      "red-deep": {
+        "role": "tertiary",
+        "displayName": "Red Deep",
+        "canonical": "oklch(42.0% 0.125 29.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.031 29.6)",
+          "oklch(26.4% 0.046 29.6)",
+          "oklch(37.9% 0.078 29.6)",
+          "oklch(49.3% 0.110 29.6)",
+          "oklch(60.7% 0.110 29.6)",
+          "oklch(72.1% 0.078 29.6)",
+          "oklch(83.6% 0.046 29.6)",
+          "oklch(95.0% 0.031 29.6)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The landing h1 only; 2.5rem on phones, 3.4rem on tablets, 4rem on desktop."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2 and in-app page h1; 1.9rem on phones. Gold when set on glaze."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "\"ARGOS\" beside the gold ring; never larger than 1.15rem."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "h3 and item names in Atkinson Bold; Cinzel stops at h2."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "The one sentence under a headline, in ink; 1.2rem on phones."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "20px base, 1.5 line height; glaze for primary copy, ink for secondary."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels, links and buttons (1.05rem in buttons)."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Figure captions, footer and inline code; 0.85rem only in the phone tab bar."
+      }
+    },
+    "shadows": [
+      {
+        "name": "primary-lift",
+        "value": "0 2px 6px -2px rgba(30,26,23,0.35)",
+        "purpose": "Primary button at rest; the only shadow in the system."
+      },
+      {
+        "name": "primary-lift-hover",
+        "value": "0 3px 10px -2px rgba(168,74,37,0.45)",
+        "purpose": "Primary button on hover-capable devices."
+      },
+      {
+        "name": "focus-ring-input",
+        "value": "0 0 0 3px rgba(46,110,158,0.3)",
+        "purpose": "Input focus ring, paired with an aegean border."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing; entrances and button transitions."
+      },
+      {
+        "name": "rise",
+        "value": "900ms, translateY(12px) to 0, stagger 90ms",
+        "purpose": "Landing hero copy entrance; reduced-motion gated."
+      },
+      {
+        "name": "draw",
+        "value": "1200ms, 250ms delay, stroke-dashoffset 1 to 0",
+        "purpose": "The gold day-track wave draws once; reduced-motion gated."
+      },
+      {
+        "name": "settle",
+        "value": "600ms, translateY(6px) to 0, delay 450ms + 140ms per item",
+        "purpose": "Dose markers settle onto the wave; reduced-motion gated."
+      },
+      {
+        "name": "control",
+        "value": "160ms",
+        "purpose": "Button background, transform and shadow transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ],
+    "ornament": [
+      {
+        "name": "meander",
+        "value": "14px strip, 28x14px tiles, 3px gold stroke, repeat-x (.meander) or repeat-y (.meander-v)",
+        "purpose": "The only ornament: section rule, band edge, header underline, card top edge."
+      },
+      {
+        "name": "day-track",
+        "value": "3px gold wave, round caps, pathLength 1",
+        "purpose": "The line the dose markers sit on."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action on a screen: \"Get started\", \"Send me a code\".",
+      "html": "<button class=\"ds-btn-primary\">Get started</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:3.5rem;padding:0 1.75rem;border-radius:.375rem;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;font-weight:700;font-size:1.05rem;line-height:1;text-decoration:none;cursor:pointer;user-select:none;transition:background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),transform 160ms cubic-bezier(0.16, 1, 0.3, 1),box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);background:#a84a25;color:#f3e9d2;border:0;box-shadow:0 2px 6px -2px rgba(30,26,23,.35);}.ds-btn-primary:hover{background:#953f1e;box-shadow:0 3px 10px -2px rgba(168,74,37,.45);}.ds-btn-primary:active{transform:scale(.97);}.ds-btn-primary:disabled{opacity:.6;cursor:not-allowed;}.ds-btn-primary:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Glaze outline that inverts on hover; for the second action.",
+      "html": "<button class=\"ds-btn-secondary\">Add medicine</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:3.5rem;padding:0 1.75rem;border-radius:.375rem;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;font-weight:700;font-size:1.05rem;line-height:1;text-decoration:none;cursor:pointer;user-select:none;transition:background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),transform 160ms cubic-bezier(0.16, 1, 0.3, 1),box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);background:transparent;color:#1e1a17;border:2px solid #1e1a17;}.ds-btn-secondary:hover{background:#1e1a17;color:#f3e9d2;}.ds-btn-secondary:active{transform:scale(.97);}.ds-btn-secondary:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "An underlined aegean-deep link sized like a control.",
+      "html": "<button class=\"ds-btn-quiet\">Already set up? Sign in</button>",
+      "css": ".ds-btn-quiet{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:3.5rem;padding:0 1.75rem;border-radius:.375rem;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;font-weight:700;font-size:1.05rem;line-height:1;text-decoration:none;cursor:pointer;user-select:none;transition:background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),transform 160ms cubic-bezier(0.16, 1, 0.3, 1),box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);min-height:3rem;padding:0 1rem;background:transparent;border:0;color:#275f89;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;}.ds-btn-quiet:hover{color:#1e1a17;}.ds-btn-quiet:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Labelled field, 2px glaze border, white-at-60% fill, aegean focus ring, red-deep inline error.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-email\">Email address</label><input class=\"ds-field-input\" id=\"ds-email\" type=\"email\" placeholder=\"you@example.com\"><p class=\"ds-field-error\" role=\"alert\">That does not look like an email address.</p></div>",
+      "css": ".ds-field{font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;color:#1e1a17;max-width:420px;}.ds-field-label{display:block;font-weight:700;font-size:1rem;}.ds-field-input{margin-top:.5rem;display:block;width:100%;min-height:3rem;border-radius:.375rem;border:2px solid rgba(30,26,23,.7);background:rgba(255,255,255,.6);padding:0 1rem;font:inherit;font-size:1.1rem;color:inherit;}.ds-field-input::placeholder{color:rgba(74,66,58,.6);}.ds-field-input:focus{outline:none;border-color:#2e6e9e;box-shadow:0 0 0 3px rgba(46,110,158,.3);}.ds-field-input[aria-invalid=\"true\"]{border-color:#b5483a;}.ds-field-error{margin:.5rem 0 0;color:#842a20;font-size:1rem;}"
+    },
+    {
+      "name": "Top Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Desktop app header: wordmark, icon+label links, glaze pill on the current page, meander beneath.",
+      "html": "<header class=\"ds-appbar\"><div class=\"ds-appbar-row\"><a class=\"ds-wordmark\" href=\"#\" aria-label=\"Argos home\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 22 22\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"9\" fill=\"none\" stroke=\"#d4a64a\" stroke-width=\"2.5\"/><circle cx=\"11\" cy=\"11\" r=\"2.5\" fill=\"#1e1a17\"/></svg><span>ARGOS</span></a><nav aria-label=\"Main\"><ul class=\"ds-nav\"><li><a class=\"ds-nav-link\" href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z\"/></svg><span>Home</span></a></li><li><a class=\"ds-nav-link\" href=\"#\"><svg viewBox=\"0 0 32 32\" width=\"20\" height=\"20\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3h8v4h-8zM10 7h12v3H10zM10 10v17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10\"/><path d=\"M13 16h6M13 20h6\"/></svg><span>Medicines</span></a></li></ul></nav></div><div class=\"ds-meander\" aria-hidden=\"true\"></div></header>",
+      "css": ".ds-appbar{background:rgba(243,233,210,.95);border-bottom:1px solid rgba(30,26,23,.15);font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;}.ds-appbar-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;}.ds-wordmark{display:inline-flex;align-items:center;gap:.5rem;color:#1e1a17;text-decoration:none;font-family:\"Cinzel\", Georgia, serif;font-weight:700;font-size:1.15rem;letter-spacing:.12em;}.ds-nav{display:flex;gap:.25rem;list-style:none;margin:0;padding:0;}.ds-nav-link{display:inline-flex;align-items:center;gap:.5rem;min-height:3rem;padding:0 1rem;border-radius:.375rem;font-weight:700;color:#1e1a17;text-decoration:none;transition:background-color 160ms,color 160ms;}.ds-nav-link:hover{background:#e9dcbd;}.ds-nav-link[aria-current=\"page\"]{background:#1e1a17;color:#f3e9d2;}.ds-nav-link:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}.ds-wordmark:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}.ds-meander{height:14px;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Cpath d='M0 1.5H40M3 18.5H34V7H12V13H26' fill='none' stroke='%23d4a64a' stroke-width='3'/%3E%3C/svg%3E\");background-size:28px 14px;background-repeat:repeat-x;}"
+    },
+    {
+      "name": "Phone Tab Bar",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Fixed bottom bar on phones: four columns, icon over 0.85rem bold label, terracotta-deep when current.",
+      "html": "<nav class=\"ds-tabbar\" aria-label=\"Main\"><a class=\"ds-tab\" href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z\"/></svg><span>Home</span></a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 32 32\" width=\"20\" height=\"20\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3h8v4h-8zM10 7h12v3H10zM10 10v17a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10\"/><path d=\"M13 16h6M13 20h6\"/></svg><span>Medicines</span></a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3.5 2\"/></svg><span>Ship's log</span></a><a class=\"ds-tab\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7.5v5.5M12 16.5h.01\" stroke-width=\"2.5\"/></svg><span>Settings</span></a></nav>",
+      "css": ".ds-tabbar{display:grid;grid-template-columns:repeat(4,1fr);background:#f3e9d2;border-top:2px solid rgba(212,166,74,.6);font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;}.ds-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;min-height:4rem;font-size:.85rem;font-weight:700;color:#4a423a;text-decoration:none;}.ds-tab svg{width:24px;height:24px;}.ds-tab[aria-current=\"page\"]{color:#a84a25;}.ds-tab:focus-visible{outline:3px solid #2e6e9e;outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Framed Card",
+      "kind": "card",
+      "refersTo": "card-framed",
+      "description": "The sign-in card: meander as top edge, 2px gold frame on the other three sides, cream inside.",
+      "html": "<section class=\"ds-card\"><div class=\"ds-meander\" aria-hidden=\"true\"></div><div class=\"ds-card-body\"><h2 class=\"ds-card-title\">Sign in</h2><p class=\"ds-card-copy\">We will email you a six-digit code and a link. Use either one. No password to remember.</p></div></section>",
+      "css": ".ds-card{max-width:480px;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;color:#1e1a17;}.ds-meander{height:14px;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Cpath d='M0 1.5H40M3 18.5H34V7H12V13H26' fill='none' stroke='%23d4a64a' stroke-width='3'/%3E%3C/svg%3E\");background-size:28px 14px;background-repeat:repeat-x;}.ds-card-body{background:#f3e9d2;border:2px solid rgba(212,166,74,.7);border-top:0;padding:1.75rem 1.5rem 2rem;}.ds-card-title{margin:0;font-family:\"Cinzel\", Georgia, serif;font-weight:700;font-size:1.9rem;line-height:1.25;letter-spacing:.01em;}.ds-card-copy{margin:.5rem 0 0;color:#4a423a;font-size:1rem;line-height:1.5;}"
+    },
+    {
+      "name": "Info Notice",
+      "kind": "card",
+      "refersTo": "notice-info",
+      "description": "Non-error status: 10% aegean tint inside a 2px aegean-at-40% border.",
+      "html": "<div class=\"ds-notice\" role=\"status\"><p class=\"ds-notice-lead\">Sign-in is not connected yet.</p><p>Add the Supabase keys to <code>web/.env.local</code> and restart the app.</p></div>",
+      "css": ".ds-notice{border-radius:.375rem;border:2px solid rgba(46,110,158,.4);background:rgba(46,110,158,.1);padding:1rem;color:#4a423a;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;font-size:1rem;line-height:1.5;}.ds-notice p{margin:0;}.ds-notice p+p{margin-top:.25rem;}.ds-notice-lead{font-weight:700;color:#1e1a17;}.ds-notice code{font-size:.95rem;overflow-wrap:anywhere;}"
+    },
+    {
+      "name": "Dose Markers",
+      "kind": "custom",
+      "refersTo": "dose-marker-taken",
+      "description": "The three dose states from the day watch: olive taken, soft red missed, bare cream upcoming, each with its deep-colour note.",
+      "html": "<ol class=\"ds-day\"><li class=\"ds-dose\"><span class=\"ds-dose-time\">8:00 AM</span><span class=\"ds-dose-mark ds-dose-mark--taken\" role=\"img\" aria-label=\"Taken\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></span><p class=\"ds-dose-name\">Metformin</p><p class=\"ds-dose-note ds-dose-note--taken\">Taken at 8:04, bottle checked</p></li><li class=\"ds-dose\"><span class=\"ds-dose-time\">1:00 PM</span><span class=\"ds-dose-mark ds-dose-mark--missed\" role=\"img\" aria-label=\"Missed\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7.5v5.5M12 16.5h.01\" stroke-width=\"2.5\"/></svg></span><p class=\"ds-dose-name\">Lisinopril</p><p class=\"ds-dose-note ds-dose-note--missed\">No answer. Minh was texted</p></li><li class=\"ds-dose\"><span class=\"ds-dose-time\">8:00 PM</span><span class=\"ds-dose-mark ds-dose-mark--upcoming\" role=\"img\" aria-label=\"Upcoming\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v5l3.5 2\"/></svg></span><p class=\"ds-dose-name\">Vitamin D</p><p class=\"ds-dose-note\">Argos will call</p></li></ol>",
+      "css": ".ds-day{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;list-style:none;margin:0;padding:0;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;color:#1e1a17;}.ds-dose-time{display:block;font-size:.95rem;font-weight:700;letter-spacing:.025em;color:#4a423a;}.ds-dose-mark{margin-top:.5rem;display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:9999px;border:3px solid;}.ds-dose-mark--taken{border-color:#6b8e4e;background:#6b8e4e;color:#f3e9d2;}.ds-dose-mark--missed{border-color:#b5483a;background:#b5483a;color:#f3e9d2;}.ds-dose-mark--upcoming{border-color:#1e1a17;background:#f3e9d2;color:#1e1a17;}.ds-dose-name{margin:1rem 0 0;font-size:1.2rem;font-weight:700;line-height:1.25;}.ds-dose-note{margin:.25rem 0 0;color:#4a423a;font-size:1rem;line-height:1.5;}.ds-dose-note--taken{color:#3f5f2a;}.ds-dose-note--missed{color:#842a20;}"
+    },
+    {
+      "name": "Headline on Glaze",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "The story band: glaze fill, gold Cinzel h2, cream lead, meander top and bottom.",
+      "html": "<section class=\"ds-band\"><div class=\"ds-meander\" aria-hidden=\"true\"></div><div class=\"ds-band-body\"><h2 class=\"ds-band-title\">Why Argos</h2><p class=\"ds-band-lead\">Odysseus was away from Ithaca for twenty years. When he finally came home, only his old dog Argos knew him.</p></div><div class=\"ds-meander\" aria-hidden=\"true\"></div></section>",
+      "css": ".ds-band{background:#1e1a17;color:#f3e9d2;font-family:\"Atkinson Hyperlegible\", system-ui, sans-serif;}.ds-meander{height:14px;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Cpath d='M0 1.5H40M3 18.5H34V7H12V13H26' fill='none' stroke='%23d4a64a' stroke-width='3'/%3E%3C/svg%3E\");background-size:28px 14px;background-repeat:repeat-x;}.ds-band-body{padding:2.5rem 1.25rem;}.ds-band-title{margin:0;font-family:\"Cinzel\", Georgia, serif;font-weight:700;font-size:1.9rem;line-height:1.2;letter-spacing:.01em;color:#d4a64a;}.ds-band-lead{margin:1rem 0 0;max-width:58ch;font-size:1.25rem;line-height:1.55;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Terrace at Ithaca",
+    "overview": "ARGOS is a vigil, not a dashboard. The whole surface is a single warm material, cream, with the Odyssey carried by three devices and nothing else: Cinzel capitals for titles, a thin gold Greek-key meander as the only ornament, and a glaze-dark band where the story is told. Everything that does work (body copy, labels, buttons, inputs) is set in Atkinson Hyperlegible at a 20px base, because the readers are often anxious adult children on a phone and, sometimes, the older parent with low vision. The theme is a layer over clarity, never a puzzle.\n\nThe system is flat and bordered. Surfaces sit on the cream ground without shadows; structure comes from 2px rules in glaze or gold and from the meander strip that separates regions (hero from body, header from app, the top of the sign-in card). Colour is rationed: terracotta appears only on the primary action and the step numerals, aegean only on links and focus, gold only as hairline and the one headline set on glaze. The states of a dose (olive taken, soft red missed, bare cream upcoming) are the only other colours that carry meaning.\n\nMotion is a single authored entrance: the hero copy rises, the gold \"day\" line draws once, the dose markers settle. After that, nothing moves except hover and focus, and all of it stops under reduced motion (the hero video pauses too).",
+    "keyCharacteristics": [
+      "One warm ground (cream) with one dark band (glaze); no white page, no grey chrome.",
+      "Cinzel Bold is reserved for h1, h2 and the wordmark; every other word is Atkinson Hyperlegible.",
+      "Ornament is a single 14px gold meander strip, horizontal or vertical, and a 3px gold wave as the day track.",
+      "Flat surfaces, 2px borders, square cards; the only shadow is a soft lift under the primary button.",
+      "Deep colour variants exist purely for WCAG AA on cream; the brand values are the owner's.",
+      "One entrance animation, exponential ease-out, then stillness."
+    ],
+    "rules": [
+      {
+        "name": "The Deep-For-Text Rule",
+        "body": "Terracotta, aegean, olive and red are fills; their `-deep` partner is the text or the only version that may touch cream as a small element. Never set body-size text in a base brand colour on cream.",
+        "section": "colors"
+      },
+      {
+        "name": "The Hairline Gold Rule",
+        "body": "Gold is ornament: strokes of 2–3px (meander, wave, rules, the wordmark ring) and one headline on glaze. It is never a fill, never a button, never body text.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Terracotta Rule",
+        "body": "Terracotta-deep marks the primary action on a screen and the numbered steps leading to it. Two filled terracotta buttons in one viewport is a defect.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cinzel Ration Rule",
+        "body": "Cinzel is for h1, h2, the wordmark and the step numerals. Any h3 or smaller is Atkinson Bold. No Cinzel in body, buttons, labels or navigation.",
+        "section": "typography"
+      },
+      {
+        "name": "The Twenty Rule",
+        "body": "The root font size is 20px and nothing user-facing drops below 0.95rem (19px). Inputs are 60px tall. Reduce size by stepping the ramp, never by shrinking the root.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Shadow Rule",
+        "body": "Only the primary button casts a shadow. Cards, inputs, navigation and the header stay flat; if an element needs separation, give it a 2px border or set it on glaze.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the page cream and reserve glaze fills for one story band per page, topped and tailed by the meander.",
+      "Do set every text link in aegean-deep bold, and every error in red-deep with a recovery sentence.",
+      "Do use the `-deep` variant whenever a brand colour becomes text or a small mark on cream.",
+      "Do give every control at least 3rem height (buttons 3.5rem), a visible label above, and the 3px aegean focus outline.",
+      "Do structure with 2px rules (glaze for lists, gold for ornament) and square frames; round only controls (0.375rem) and status markers (circles).",
+      "Do keep one filled terracotta-deep button per viewport and let \"Sign in\" be a quiet link beside it.",
+      "Do wrap every entrance animation in `prefers-reduced-motion: no-preference` and use the expo ease-out."
+    ],
+    "donts": [
+      "Don't set Cinzel below h2 (except the step numerals and the wordmark), or use it in buttons, labels or navigation.",
+      "Don't add shadows to cards, inputs, nav or headers; the primary button is the only element that lifts.",
+      "Don't fill anything with gold or set gold body text; gold is a 2–3px stroke or a headline on glaze.",
+      "Don't introduce white surfaces, grey chrome, parchment textures or fake-ancient body fonts; cream and glaze are the whole material.",
+      "Don't use base terracotta, aegean, olive or red as text on cream.",
+      "Don't replace the custom stroke icons with an icon font or a third-party set, or add glyphs that are not in `Icons.tsx`.",
+      "Don't add a second ornament (laurel, column, vase texture) without a system change; the build carries only the meander and the wave."
+    ]
+  }
+}
