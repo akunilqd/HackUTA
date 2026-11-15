@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/Wordmark";
+import { Toaster } from "@/components/dashboard/ActionForm";
 
 export default function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
   return (
@@ -14,6 +15,7 @@ export default function DashboardLayout({ children }: LayoutProps<"/dashboard">)
         <div className="meander" aria-hidden="true" />
       </header>
       <main className="mx-auto w-full max-w-[72rem] flex-1 px-5 pb-20 pt-8 md:px-8 md:pt-10">{children}</main>
+      <Toaster />
     </div>
   );
 }

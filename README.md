@@ -6,7 +6,8 @@ medicine, and logs the dose. Families set the patient up on the website.
 ```
 HackUTA/
 ├─ my-agent/   Backend (Node): voice agent, scheduler, Supabase access, Chert/LiveKit calls
-├─ web/        Frontend (Next.js): landing page and onboarding, saves to Supabase
+├─ web/        Frontend (Next.js): landing page, onboarding, and the dashboard (profile, prescriptions,
+│              dose history, doctor appointments), all reading and writing Supabase
 ├─ supabase/   Database SQL, run by hand in the Supabase SQL editor, in number order
 ├─ docs/       SYSTEM_DESIGN.md (architecture), PLAN.md (backend build plan)
 ├─ DESIGN.md   Visual system for the website
@@ -26,6 +27,17 @@ web (onboarding form) ──POST /api/onboarding──▶ Supabase ◀── my-
 Both sides use the same Supabase project and the same `users`, `user_medications` and `dose_logs` tables.
 
 ## Run it
+
+Everything at once on Windows (web + agent + scheduler, each in its own window):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .un-all.ps1            # add -Inbound to also run `chert dev` for calls INTO the line
+```
+
+It checks both `.env.local` files, runs `npm install` where needed, and opens http://localhost:3000.
+Outbound reminder calls need only the agent and the scheduler; `chert dev` is for patients calling in.
+
+Or by hand:
 
 Backend (see `my-agent/README.md` for Chert and LiveKit setup):
 
@@ -57,5 +69,6 @@ Run the files in `supabase/` once, in order. All are safe to run again.
 | `002_dose_status.sql` | extra `dose_logs.status` values for reminder calls | backend |
 | `003_meal_timing.sql` | `user_medications.after_meal` (`Yes` / `No`) | backend and web |
 | `004_web_app.sql` | optional: photo and family-name columns, RLS, photo bucket. **Proposed, not applied.** | later web pages |
+| `005_doctor_appointments.sql` | `doctor_appointments` table, with the doctor's instructions per visit | web dashboard |
 
 Each side keeps its own `.env.local` (git-ignored). The web app only needs the two Supabase values.

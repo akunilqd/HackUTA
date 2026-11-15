@@ -16,7 +16,10 @@ export function DashboardTabs({ patientId }: { patientId: string }) {
   const pathname = usePathname();
   const activeRef = useRef<HTMLAnchorElement>(null);
   // On narrow phones the tab row scrolls sideways; keep the current tab in view.
-  useEffect(() => activeRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" }), [pathname]);
+  // Braces matter: newer Chrome returns a Promise from scrollIntoView, and an effect must not return one.
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [pathname]);
   return (
     <nav aria-label="Patient pages" className="-mx-5 overflow-x-auto px-5 md:mx-0 md:px-0">
       <ul className="flex min-w-max gap-1 border-b-2 border-glaze/15">

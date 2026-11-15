@@ -19,7 +19,8 @@ const done = (message: string): ActionState => {
   return { ok: true, message, at: Date.now() };
 };
 const fail = (message: string): ActionState => ({ ok: false, message, at: Date.now() });
-const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").trim();
+// Browsers submit textarea line breaks as CRLF; store plain LF.
+const text = (fd: FormData, key: string) => String(fd.get(key) ?? "").replace(/\r\n?/g, "\n").trim();
 
 const DOSE_STATUSES: DoseStatus[] = [
   "pending",
@@ -223,6 +224,7 @@ export async function saveAppointment(_: ActionState | null, fd: FormData): Prom
     scheduled_at: when.toISOString(),
     status,
     notes: text(fd, "notes").slice(0, 2000) || null,
+    doctor_instructions: text(fd, "doctorInstructions").slice(0, 4000) || null,
   };
 
   const db = adminClient();

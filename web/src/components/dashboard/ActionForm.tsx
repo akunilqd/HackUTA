@@ -7,12 +7,52 @@ import { inputClass } from "./Field";
 
 type Action = (prev: ActionState | null, fd: FormData) => Promise<ActionState>;
 
-/** Lets a form inside <Editable> or <AddPanel> close it, and hand its success message to the closed view. */
-const PanelContext = createContext<((message: string) => void) | null>(null);
+/** Lets a form inside <Editable> or <AddPanel> close it after a successful save. */
+const PanelContext = createContext<(() => void) | null>(null);
+
+const TOAST_EVENT = "dashboard:toast";
+
+/**
+ * Success messages live here, not beside the form: a save can move a card to another section
+ * (an appointment marked Completed) or remove it (a delete), which would unmount a local message.
+ * Rendered once in the dashboard layout.
+ */
+export function Toaster() {
+  const [toast, setToast] = useState<{ message: string; id: number } | null>(null);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const show = (e: Event) => {
+      const message = (e as CustomEvent<string>).detail;
+      setToast({ message, id: Date.now() });
+      clearTimeout(timer);
+      timer = setTimeout(() => setToast(null), 5000);
+    };
+    window.addEventListener(TOAST_EVENT, show);
+    return () => {
+      window.removeEventListener(TOAST_EVENT, show);
+      clearTimeout(timer);
+    };
+  }, []);
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-20 flex justify-center px-4" role="status" aria-live="polite">
+      {toast && (
+        <p
+          key={toast.id}
+          className="settle pointer-events-auto flex items-center gap-3 border-2 border-gold bg-glaze px-5 py-3 font-bold text-cream shadow-[0_6px_20px_-6px_rgba(30,26,23,0.5)]"
+        >
+          <span aria-hidden="true" className="text-gold">
+            ✓
+          </span>
+          {toast.message}
+        </p>
+      )}
+    </div>
+  );
+}
 
 /**
  * A form bound to a dashboard Server Action. Submits without React's automatic reset, so a rejected
- * edit keeps what the person typed; the server's message is announced below the button.
+ * edit keeps what the person typed and shows the error under the button; success goes to the <Toaster>.
  */
 export function ActionForm({
   action,
@@ -35,14 +75,20 @@ export function ActionForm({
   className?: string;
   children?: ReactNode;
 }) {
-  const [state, formAction, pending] = useActionState(action, null);
+  // Toast as soon as the server answers, not in an effect: the save's refresh can unmount this form
+  // (a card moving to another section) before any effect of it runs.
+  const [state, formAction, pending] = useActionState(async (prev: ActionState | null, fd: FormData) => {
+    const result = await action(prev, fd);
+    if (result.ok) window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: result.message }));
+    return result;
+  }, null);
   const formRef = useRef<HTMLFormElement>(null);
   const closePanel = useContext(PanelContext);
 
   useEffect(() => {
     if (!state?.ok) return;
     if (resetOnSuccess) formRef.current?.reset();
-    closePanel?.(state.message);
+    closePanel?.();
     // Runs once per server answer; `at` changes on every submit.
   }, [state?.at]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -65,9 +111,8 @@ export function ActionForm({
         <Button type="submit" variant={variant} disabled={pending} className={variant === "quiet" ? "" : "min-h-12"}>
           {pending ? pendingLabel : submitLabel}
         </Button>
-        <p role="status" aria-live="polite" className={state?.ok ? "font-bold text-olive-deep" : "font-bold text-red-deep"}>
-          {/* Success messages show in the closed panel when there is one. */}
-          {state && !pending && (!state.ok || !closePanel) ? state.message : ""}
+        <p role="alert" className="font-bold text-red-deep">
+          {state && !state.ok && !pending ? state.message : ""}
         </p>
       </div>
     </form>
@@ -91,12 +136,10 @@ export function Editable({
   inline?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
-  const [message, setMessage] = useState("");
   const editRef = useRef<HTMLButtonElement>(null);
 
-  const close = (msg: string) => {
+  const close = () => {
     setEditing(false);
-    setMessage(msg);
     requestAnimationFrame(() => editRef.current?.focus());
   };
 
@@ -105,11 +148,7 @@ export function Editable({
       <PanelContext value={close}>
         <div>
           {form}
-          <button
-            type="button"
-            onClick={() => close("")}
-            className="mt-3 min-h-12 text-aegean-deep underline underline-offset-4 hover:text-glaze"
-          >
+          <button type="button" onClick={close} className="mt-3 min-h-12 text-aegean-deep underline underline-offset-4 hover:text-glaze">
             Cancel
           </button>
         </div>
@@ -119,23 +158,11 @@ export function Editable({
   return (
     <div className={inline ? "flex flex-wrap items-center justify-between gap-x-4 gap-y-2" : ""}>
       <div className={inline ? "min-w-0 flex-1" : ""}>{view}</div>
-      <div className={inline ? "flex items-center gap-4" : "mt-5 flex flex-wrap items-center gap-4"}>
-        <Button
-          ref={editRef}
-          type="button"
-          variant="secondary"
-          className="min-h-12"
-          onClick={() => {
-            setMessage("");
-            setEditing(true);
-          }}
-        >
+      <div className={inline ? "flex items-center" : "mt-5"}>
+        <Button ref={editRef} type="button" variant="secondary" className="min-h-12" onClick={() => setEditing(true)}>
           {editLabel}
           {title && <span className="sr-only"> {title}</span>}
         </Button>
-        <p role="status" aria-live="polite" className="font-bold text-olive-deep">
-          {message}
-        </p>
       </div>
     </div>
   );
@@ -144,26 +171,13 @@ export function Editable({
 /** A "+ Add …" button that opens a create form and closes it again after a successful save. */
 export function AddPanel({ label, children }: { label: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const close = (msg: string) => {
-    setOpen(false);
-    setMessage(msg);
-  };
+  const close = () => setOpen(false);
   if (!open) {
     return (
-      <div className="flex flex-wrap items-center gap-4">
-        <Button
-          type="button"
-          onClick={() => {
-            setMessage("");
-            setOpen(true);
-          }}
-        >
+      <div>
+        <Button type="button" onClick={() => setOpen(true)}>
           + {label}
         </Button>
-        <p role="status" aria-live="polite" className="font-bold text-olive-deep">
-          {message}
-        </p>
       </div>
     );
   }
@@ -172,7 +186,7 @@ export function AddPanel({ label, children }: { label: string; children: ReactNo
       <div className="border-2 border-terracotta-deep/50 bg-white/40 px-5 py-6 md:px-7">
         <h2 className="text-[1.4rem]">{label}</h2>
         <div className="mt-4">{children}</div>
-        <button type="button" onClick={() => close("")} className="mt-3 min-h-12 text-aegean-deep underline underline-offset-4 hover:text-glaze">
+        <button type="button" onClick={close} className="mt-3 min-h-12 text-aegean-deep underline underline-offset-4 hover:text-glaze">
           Cancel
         </button>
       </div>
