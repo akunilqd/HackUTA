@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  /* Ithaca palette (owner-pinned). Deep variants exist only to meet WCAG AA on cream. */
+  --color-cream: #f3e9d2;
+  --color-cream-deep: #e9dcbd;
+  --color-glaze: #1e1a17;
+  --color-ink: #4a423a;
+  --color-terracotta: #c8643b;
+  --color-terracotta-deep: #a84a25;
+  --color-aegean: #2e6e9e;
+  --color-aegean-deep: #275f89;
+  --color-gold: #d4a64a;
+  --color-olive: #6b8e4e;
+  --color-olive-deep: #3f5f2a;
+  --color-red: #b5483a;
+  --color-red-deep: #842a20;
+
+  --font-display: var(--font-cinzel), "Cinzel", Georgia, serif;
+  --font-sans: var(--font-atkinson), "Atkinson Hyperlegible", system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: light;
+  --meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Cpath d='M0 1.5H40M3 18.5H34V7H12V13H26' fill='none' stroke='%23d4a64a' stroke-width='3'/%3E%3C/svg%3E");
+  /* Running-dog (Vitruvian wave) border, the classical scroll named for a running hound. */
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 24'%3E%3Cpath d='M0 20 C10 20 14 4 26 4 C34 4 36 14 30 15 C25 16 24 10 28 10 M30 15 C36 20 40 20 48 20' fill='none' stroke='%23d4a64a' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  --meander-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 40'%3E%3Cpath d='M18.5 0V40M1.5 3V34H13V12H7V26' fill='none' stroke='%23d4a64a' stroke-width='3'/%3E%3C/svg%3E");
+}
+
+html {
+  font-size: 20px; /* larger base for older readers; every rem in the app scales with it */
+  background: var(--color-cream);
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-glaze);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-glaze);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-aegean);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a {
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1.5px;
+}
+
+@layer base {
+  h1, h2 {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  code { overflow-wrap: anywhere; }
+}
+
+/* Thin gold Greek-key rule: one tile row, 14px tall. */
+.meander {
+  height: 14px;
+  background-image: var(--meander);
+  background-size: 28px 14px;
+  background-repeat: repeat-x;
+}
+.meander-v {
+  width: 14px;
+  background-image: var(--meander-v);
+  background-size: 14px 28px;
+  background-repeat: repeat-y;
+}
+
+.running-dog {
+  height: 24px;
+  background-image: var(--wave);
+  background-size: 48px 24px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+/* One authored entrance for the landing hero; everything else is still. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 900ms var(--ease-out-expo) both;
+  }
+  .rise-2 { animation-delay: 90ms; }
+  .rise-3 { animation-delay: 180ms; }
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 1200ms var(--ease-out-expo) 250ms forwards;
+  }
+  .settle {
+    opacity: 0;
+    animation: settle 600ms var(--ease-out-expo) forwards;
+  }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes settle {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
