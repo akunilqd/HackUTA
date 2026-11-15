@@ -1,0 +1,27 @@
+{
+  "name": "chert-video-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.23.2 || ^24.0.0 || ^26.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file=.env.local agent.mjs start",
+    "scheduler": "node --env-file=.env.local scheduler.mjs",
+    "seed": "node --env-file=.env.local seed.mjs",
+    "check": "node --check chert-rooms.mjs && node --check agent.mjs && node --check face.mjs && node --check greet.mjs && node --check scheduler.mjs && node --check seed.mjs && node --check call-me.mjs && node --check lib/db.mjs && node --check lib/chert.mjs && node --check lib/outbound.mjs && node --check lib/dose-session.mjs && node --check lib/vision.mjs",
+    "help": "node agent.mjs --help"
+  },
+  "dependencies": {
+    "@google/genai": "^2.32.0",
+    "@livekit/agents": "1.8.0",
+    "@livekit/agents-plugin-google": "1.8.0",
+    "@livekit/rtc-node": "0.13.35",
+    "@supabase/supabase-js": "^2.119.0",
+    "jpeg-js": "^0.4.4",
+    "livekit-server-sdk": "^2.19.3",
+    "node-cron": "^4.6.0",
+    "zod": "^4.6.7"
+  }
+}
