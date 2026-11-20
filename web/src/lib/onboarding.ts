@@ -27,7 +27,7 @@ export const medicineSchema = z
   .object({
     name: z.string().trim().min(1, "Enter the medicine's name."),
     dosage: z.string().trim().min(1, "Enter the dose, like 1 tablet, 500 mg."),
-    times: z.array(z.object({ value: z.string().regex(/^\d{2}:\d{2}$/, "Choose a time.") })).min(1, "Add at least one time."),
+    times: z.array(z.object({ value: z.string().regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, "Choose a time.") })).min(1, "Add at least one time."),
     startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Choose a start date."),
     endDate: z.string(),
     // Stored exactly as the database check constraint allows: "Yes" (after a meal) or "No" (before a meal).
